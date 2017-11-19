@@ -1,5 +1,12 @@
 #include "LedControl.h"
-
+/*
+ * 
+ * test2_artwallboard
+ * Kent Hutson
+ * this turns on each of the 64 channels in turn
+ * as of 11/18/2017, up to 5 channels light up - this is on a board
+ * that is not fully populated with lights, however.
+ */
 // 20 is the number of led strips
 // 3 is the number of leds per strip
 // 3 is the number of leds per "led" (3 because tri color)
@@ -28,6 +35,7 @@ void setup()
   lc.shutdown(0,false);
   lc.setIntensity(0,intensity);
   lc.clearDisplay(0);
+  lc.spiTransfer(0,9,0);//no digit decoding
   inputString.reserve(200);
 
 }
