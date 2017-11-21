@@ -49,6 +49,15 @@ pi:
 
 arduino commands:
 x is hexadecimal digit (0..F)
-i<d>; - set intensity - decimal
-s<x16>; - set board bits x16 is 64 bits 
-d<int>; - set delay in milliseconds decimal
+color : 0..7 for rgb, 0..1 for bw, xxx need name translation to use on pi
+
+i<board>,<d>; - set intensity - decimal
+m<board>,<x16>; - set board <board (0..3)> matrix x16 is 64 bits 
+d<int>; - delay for <int> milliseconds decimal
+s<board>,<row>,<col>,<color>; - set pixel
+r,<sequence_name>; - start named sequence recording
+e; - end current sequence recording
+p,<sequence_name>; - play sequence
+
+all commands can be sent through main web site using the form 
+http://<piaddress>/<lightgroup>/<board>/<board_command>
