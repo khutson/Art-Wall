@@ -25,14 +25,21 @@ project:
     [ lightgroups ]
 
 lightgroup:
-{ "name": "thermometer",
+{ "name": "thermometer", #name of the arduino that controls this lightgroup
+    "connection": "usb" | "net", # how the arduino connects to the unix host
+    "ip": <ip_address>, #only useful for arduinos with wifi
+    "boards": [ board ]
+}
+
+board:
+{ "name": <string>, # optional
     "lights":[light]
     }
     
 light:
 {   "name": "thermometer0"} #if not specified, created as lightgroup['name']+'index'
     "index": 0,
-    "loc":[0,0,0],
+    "loc":[[0,0,0],[1,1,1]], #top left and bottom right coordinates of light
     "channels": [0,1,2]
     "default_color": "white",
     "color":"white",
