@@ -20,6 +20,15 @@ void print_config(struct LightGroupInfo lgi){
   Serial.print("\"num_boards\": \""); Serial.print(lgi.num_boards);Serial.println("");
   Serial.println("}");
 }
+
+int wait_for_input( unsigned long timeout){ //milliseconds
+  unsigned long start = millis();
+  int bytes=0;
+  while ((millis()-start) < timeout && !bytes){
+    bytes = Serial.available();
+  }
+  return bytes;
+}
 void setup() {
   char c;
   char buf[MAX_NAME_LENGTH];
