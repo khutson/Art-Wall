@@ -30,7 +30,8 @@ lightgroup:
     }
     
 light:
-{   "name": "thermometer0"} #if not specified, created as lightgroup['name']+'index'
+{   "name": "thermometer0", #if not specified, created as lightgroup['name']+'index'
+    "boadnum":0,
     "index": 0,
     "loc":[0,0,0],
     "channels": [0,1,2]
@@ -44,7 +45,14 @@ light:
     
     
 pi:
-* sends config data to arduino for the groups controlled by that arduino
+* requests config data from arduino for the boards controlled by that arduino
+
+arduino:
+sends lightgroup name and board config info to pi
+lightgroup.name
+
+num_boards
+
 
 
 arduino commands:
