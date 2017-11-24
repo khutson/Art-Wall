@@ -1,7 +1,8 @@
 
 #include <EEPROM.h>
 
-#define MAGIC {'A','R','T','W'}
+#define MAGIC 1095914583 
+//{'A','R','T','W'}
 #define VERSION 1
 #define MAX_NAME_LENGTH 20
 
@@ -21,7 +22,8 @@ void print_config(struct LightGroupInfo lgi){
   Serial.println("}");
 }
 
-int wait_for_input( unsigned long timeout){ //milliseconds
+int wait_for_input( unsigned long timeout){ //seconds
+  timeout *=1000;
   unsigned long start = millis();
   int bytes=0;
   while ((millis()-start) < timeout && !bytes){
@@ -34,7 +36,7 @@ void setup() {
   char buf[MAX_NAME_LENGTH];
   int bytes_read=0;
 
-  Serial.begin(9600);
+  Serial.begin(115200);
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB port only
   }
@@ -49,7 +51,7 @@ void setup() {
 
   buf[0]='n';
   Serial.print("Change configuration? (y/n): ");
-  while (!Serial.available());
+  wait_for_input(15);
   bytes_read = Serial.readBytesUntil('\n', buf, MAX_NAME_LENGTH);
   Serial.println();
   if ( buf[0] != 'y')  {
@@ -60,7 +62,7 @@ void setup() {
   struct LightGroupInfo lgi = {MAGIC, VERSION, "", 0  };
 
   Serial.print("\nEnter new name: ");
-  while (!Serial.available());
+  wait_for_input(60);
   bytes_read = Serial.readBytesUntil('\n', lgi.name, MAX_NAME_LENGTH);
   Serial.println();
   if ( ! bytes_read){
@@ -69,7 +71,7 @@ void setup() {
   }
   Serial.print("Enter number of boards: ");
   char boardstr[3];
-  while (!Serial.available());
+  wait_for_input(60);
   bytes_read = Serial.readBytesUntil('\n', boardstr, 3);
   Serial.println();
   if ( ! bytes_read){
@@ -83,7 +85,7 @@ void setup() {
   
   Serial.print("Update to new configuration? (y/n): ");
   buf[0]='n';
-  while (!Serial.available());
+  wait_for_input(60);
   bytes_read = Serial.readBytesUntil('\n', buf, MAX_NAME_LENGTH);
   if ( !bytes_read || (buf[0] != 'y') ) {
     Serial.println("Configuration left unchanged.");

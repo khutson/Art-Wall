@@ -16,6 +16,8 @@
  *  [[0,1,0],[0,1,0][0,1,0]],
  *  [[1,0,1],[1,0,1][1,0,1]]
  */
+#include "lightgroup.h"
+ 
 const int MAXBOARDS = 4;
 int cmdDelay = 100;
 int intensity = 15;
@@ -111,7 +113,9 @@ void loop()
 //    delay(400);
 
     char buf[100];
-    Serial.setTimeout(10000);
+    int bytes_read;
+    
+    Serial.setTimeout(5000);
     lc.clearDisplay(0);
     for (int r=0; r<8; r++){
       for (int c=0; c<8; c++){
@@ -119,7 +123,16 @@ void loop()
         lc.setLed(0,r,c,true);
         Serial.print("row "); Serial.print(r);
         Serial.print(" col "); Serial.println(c);
-        Serial.readBytesUntil(';',buf,1);
+        bytes_read = Serial.readBytesUntil(';',buf,1);
+        if (bytes_read){
+          for (int i=0;i<bytes_read;i++){
+            if(buf[i]=='i'){
+              struct LightGroupInfo lgi = get_LGInfo();
+              send_lgi_json(lgi);
+              break;
+            }
+          }
+        }
 //        delay(200);
       }
     }
