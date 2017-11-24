@@ -27,7 +27,7 @@ void send_lgi_json(struct LightGroupInfo lgi){
   Serial.print("\"magic\":"); Serial.print(lgi.magic); Serial.println(",");
   Serial.print("\"version\": "); Serial.print(lgi.version); Serial.println(",");
   Serial.print("\"name\": \""); Serial.print(lgi.name);Serial.println("\",");
-  Serial.print("\"num_boards\": "); Serial.print(lgi.num_boards);Serial.println("");
+  Serial.print("\"num_boards\": \""); Serial.print(lgi.num_boards);Serial.println("");
   Serial.println("}");
 }
 

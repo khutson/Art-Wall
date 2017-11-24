@@ -115,7 +115,7 @@ void loop()
     char buf[100];
     int bytes_read;
     
-    Serial.setTimeout(5000);
+//    Serial.setTimeout(5000);
     lc.clearDisplay(0);
     for (int r=0; r<8; r++){
       for (int c=0; c<8; c++){

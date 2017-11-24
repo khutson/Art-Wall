@@ -1,26 +1,6 @@
 
 #include <EEPROM.h>
-
-#define MAGIC 1095914583 
-//{'A','R','T','W'}
-#define VERSION 1
-#define MAX_NAME_LENGTH 20
-
-struct LightGroupInfo {
-  char magic[4];
-  int version;
-  char name[MAX_NAME_LENGTH];
-  int num_boards;
-};
-
-void print_config(struct LightGroupInfo lgi){
-  Serial.println("{");
-  Serial.print("\"magic\":\""); Serial.print(lgi.magic); Serial.println("\",");
-  Serial.print("\"version\": "); Serial.print(lgi.version); Serial.println(",");
-  Serial.print("\"name\": \""); Serial.print(lgi.name);Serial.println("\",");
-  Serial.print("\"num_boards\": \""); Serial.print(lgi.num_boards);Serial.println("");
-  Serial.println("}");
-}
+#include "lightgroup.h"
 
 int wait_for_input( unsigned long timeout){ //seconds
   timeout *=1000;
@@ -43,11 +23,10 @@ void setup() {
 
   int eeAddress = 0;   //Location we want the data to be put.
 
-  struct LightGroupInfo curlgi;
-  EEPROM.get(eeAddress, curlgi);
+  struct LightGroupInfo curlgi = get_LGInfo();
 
   Serial.println("Current config:");
-  print_config(curlgi);
+  send_lgi_json(curlgi);
 
   buf[0]='n';
   Serial.print("Change configuration? (y/n): ");
@@ -81,7 +60,7 @@ void setup() {
   lgi.num_boards = atoi(boardstr);
 
   Serial.println("New configuration:");
-  print_config(lgi);
+  send_lgi_json(lgi);
   
   Serial.print("Update to new configuration? (y/n): ");
   buf[0]='n';
@@ -96,7 +75,7 @@ void setup() {
   EEPROM.put(eeAddress, lgi);
   Serial.println();
   Serial.println("Updated with these values:");
-  print_config(lgi);
+  send_lgi_json(lgi);
   
 }
 
