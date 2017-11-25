@@ -34,5 +34,8 @@ def get_lgi_configs():
         
     return lgis
 
+def get_project_config(config_file="project.json"):
+    """read project configuration from json file"""
+    
 if __name__ == '__main__':
     print(get_lgi_configs())

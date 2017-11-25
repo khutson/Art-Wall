@@ -21,24 +21,23 @@ location/size of each light in the artwork
 ## pulse_type: "up","down","sin","flat" : shape of light intesity waveform
             as time progresses through a pulse
             
-project:
-    [ lightgroups ]
+project:{
+    "name":<string>,
+    "lightgroups":[ lightgroups ]
+    }
 
-lightgroup:
+lightgroup: #each lightgroup is run by one arduino
 { "name": "thermometer", #name of the arduino that controls this lightgroup
     "connection": "usb" | "net", # how the arduino connects to the unix host
     "ip": <ip_address>, #only useful for arduinos with wifi
-    "boards": [ board ]
+    "lights": [ light ]
+    "num_boards":<int> #number of boards attached to arduino
 }
 
-board:
-{ "name": <string>, # optional
-    "lights":[light]
-    }
-    
+
 light:
 {   "name": "thermometer0", #if not specified, created as lightgroup['name']+'index'
-    "boadnum":0,
+    "boardnum":0,
     "index": 0,
     "loc":[[0,0,0],[1,1,1]], #top left and bottom right coordinates of light
     "channels": [0,1,2]
