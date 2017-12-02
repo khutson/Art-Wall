@@ -76,7 +76,15 @@ p,<sequence_name>; - play sequence
 all commands can be sent through main web site using the form 
 http://<piaddress>/<lightgroup>/<board>/<board_command>
 
-
+set_intensity,
+set_matrix,
+delay,
+set_pixel,
+clear,
+start_recording,
+end_recording,
+play,
+error,
 
 -------
             

@@ -1,0 +1,3 @@
+[submodule "software/PyCmdMessenger"]
+	path = software/PyCmdMessenger
+	url = https://github.com/harmsm/PyCmdMessenger.git
