@@ -1,3 +1,6 @@
 [submodule "software/PyCmdMessenger"]
 	path = software/PyCmdMessenger
 	url = https://github.com/harmsm/PyCmdMessenger.git
+[submodule "software/Arduino-CmdMessenger"]
+	path = software/Arduino-CmdMessenger
+	url = https://github.com/thijse/Arduino-CmdMessenger.git

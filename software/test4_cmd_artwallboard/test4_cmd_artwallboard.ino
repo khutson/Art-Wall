@@ -71,6 +71,8 @@ void on_set_intensity(void){
     int board = c.readInt16Arg();
     int intensity = c.readInt16Arg();
     lc.setIntensity(board,intensity);
+    c.sendCmd(cmd_ack,"Command set_intensity executed.");
+
 }
 
 void on_set_matrix(void){
@@ -117,6 +119,8 @@ void on_set_rgb(void){
 void on_clear(void){
   int board = c.readInt16Arg();
   lc.clearDisplay(board);
+  c.sendCmd(cmd_ack,"Command clear executed.");
+
 }
 
 void on_start_recording(void){
