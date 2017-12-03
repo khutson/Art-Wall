@@ -4,6 +4,22 @@
 # Wing IDE project file                                          #
 ##################################################################
 [project attributes]
+debug.launch-configs = (2,
+                        {'launch-pROvmp4e2RhIWBIR': ({},
+        {'buildcmd': ('project',
+                      None),
+         'env': ('project',
+                 [u'']),
+         'name': 'pingpongtest',
+         'pyexec': ('project',
+                    u''),
+         'pypath': ('project',
+                    []),
+         'pyrunargs': ('project',
+                       '-u'),
+         'runargs': u'/dev/ttyACM0 s',
+         'rundir': ('project',
+                    u'')})})
 proj.directory-list = [{'dirloc': loc('.'),
                         'excludes': (),
                         'filter': u'*',
@@ -11,3 +27,11 @@ proj.directory-list = [{'dirloc': loc('.'),
                         'recursive': True,
                         'watch_for_changes': True}]
 proj.file-type = 'shared'
+proj.launch-config = {loc('../../anaconda3/envs/p34/lib/python3.4/site-packages/PyCmdMessenger-0.2.4-py3.4.egg/PyCmdMessenger/PyCmdMessenger.py'): ('p'\
+        'roject',
+        (u'/dev/ttyACM0 s',
+         'launch-pROvmp4e2RhIWBIR')),
+                      loc('software/PyCmdMessenger/test/pingpong_test.py'): ('p'\
+        'roject',
+        (u'/dev/ttyACM0 s',
+         ''))}

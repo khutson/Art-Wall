@@ -1,12 +1,14 @@
 #include "LedControl.h"
 /*
  * 
- * test2_artwallboard
+ * test5_artwallboard
  * Kent Hutson
  * this turns on each of the 64 channels in turn
  * as of 11/18/2017, up to 5 channels light up - this is on a board
  * that is not fully populated with lights, however.
  * as of 12/1/2017, 8 channels light up when one is set - board issue?
+ * 
+ * test5 using cmdmessenger and pycmdmessenger with binary communication
  */
 // 20 is the number of led strips
 // 3 is the number of leds per "led" (3 because tri color)
@@ -15,6 +17,8 @@
 #include "lightgroup.h"
 
 #include "CmdMessenger.h"
+
+//#define DEBUG
 
 /* Define available CmdMessenger commands */
 enum {
@@ -68,52 +72,55 @@ void on_who_are_you(void){
 }
 
 void on_set_intensity(void){
-    int board = c.readInt16Arg();
-    int intensity = c.readInt16Arg();
+    int board = c.readBinArg<int>();
+    int intensity = c.readBinArg<int>();
     lc.setIntensity(board,intensity);
+#ifdef DEBUG
     c.sendCmd(cmd_ack,"Command set_intensity="+String(intensity));
-
+#endif
 }
 
 void on_set_matrix(void){
-  int board = c.readInt16Arg();
+  int board = c.readBinArg<int>();
   byte rows[8];
   for (int i=0;i<8;i++){
-    rows[i]= c.readInt16Arg() && 255;
+    rows[i]= c.readBinArg<int>() && 255;
     lc.setRow(board,i,rows[i]);
   }
+#ifdef DEBUG
   c.sendCmd(cmd_ack,"Command set_matrix executed.");
+#endif
 }
 
 void on_delay(void){
-  long delay_millis = c.readInt32Arg();
+  long delay_millis = c.readBinArg<long>();
   delay(delay_millis);
 }
 
 void on_set_pixel(void){
    
-    int board = c.readInt16Arg();
-    int row = c.readInt16Arg();
-    int col = c.readInt16Arg();
-    int val = c.readInt16Arg();
+    int board = c.readBinArg<int>();
+    int row = c.readBinArg<int>();
+    int col = c.readBinArg<int>();
+    int val = c.readBinArg<int>();
 
     lc.setLed(board,row,col,val);
+#ifdef DEBUG
       c.sendCmd(cmd_ack,"Command set_pixel executed.board=" + String(board)+
                         "row=" + String(row) +
                         " col=" + String(col) +
                         " val=" +String(val));
-
-  c.sendCmd(cmd_ack,"Command set_pixel executed.");
+#endif
 
 }
 
 void on_set_rgb(void){
    
-    int board = c.readInt16Arg();
-    int light_index = c.readInt16Arg();
-    int r = c.readInt16Arg();
-    int g = c.readInt16Arg();
-    int b = c.readInt16Arg();
+    int board = c.readBinArg<int>();
+    int light_index = c.readBinArg<int>();
+    int r = c.readBinArg<int>();
+    int g = c.readBinArg<int>();
+    int b = c.readBinArg<int>();
 
     /*need to know LED strip mapping*/
     //lc.setLed(board,row,col,val);
@@ -122,7 +129,7 @@ void on_set_rgb(void){
 }
 
 void on_clear(void){
-  int board = c.readInt16Arg();
+  int board = c.readBinArg<int>();
   lc.clearDisplay(board);
   c.sendCmd(cmd_ack,"Command clear executed.");
 
