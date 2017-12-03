@@ -10,7 +10,7 @@ def get_lgi_configs():
     
     lgis=[]
     for serdir in serdirs:        
-        ser = serial.Serial(serialdir+'/'+serdir,115200)
+        ser = serial.Serial(os.path.join(serialdir,serdir),115200)
         s=""
         m=None
         lgi=None

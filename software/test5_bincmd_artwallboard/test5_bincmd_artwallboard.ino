@@ -18,7 +18,7 @@
 
 #include "CmdMessenger.h"
 
-//#define DEBUG
+int debug = 0;
 
 /* Define available CmdMessenger commands */
 enum {
@@ -34,6 +34,7 @@ enum {
     cmd_end_recording,
     cmd_play,
     cmd_ack,
+    cmd_debug,
     cmd_error,
 };
 
@@ -75,26 +76,31 @@ void on_set_intensity(void){
     int board = c.readBinArg<int>();
     int intensity = c.readBinArg<int>();
     lc.setIntensity(board,intensity);
-#ifdef DEBUG
-    c.sendCmd(cmd_ack,"Command set_intensity="+String(intensity));
-#endif
+    if( debug ){
+        c.sendCmd(cmd_ack,"set_intensity="+String(intensity));
+    }
 }
 
 void on_set_matrix(void){
   int board = c.readBinArg<int>();
   byte rows[8];
   for (int i=0;i<8;i++){
-    rows[i]= c.readBinArg<int>() && 255;
+    rows[i]= c.readBinArg<int>() & 255;
     lc.setRow(board,i,rows[i]);
   }
-#ifdef DEBUG
-  c.sendCmd(cmd_ack,"Command set_matrix executed.");
-#endif
+  if( debug ){
+    c.sendCmd(cmd_ack,"set_matrix");
+  }
 }
 
 void on_delay(void){
   long delay_millis = c.readBinArg<long>();
+  if( debug && delay_millis > 1000){
+    //only give message if more than a second delay
+    c.sendCmd(cmd_ack,"delay for "+String(delay_millis)+" milliseconds.");
+  }
   delay(delay_millis);
+
 }
 
 void on_set_pixel(void){
@@ -105,13 +111,12 @@ void on_set_pixel(void){
     int val = c.readBinArg<int>();
 
     lc.setLed(board,row,col,val);
-#ifdef DEBUG
-      c.sendCmd(cmd_ack,"Command set_pixel executed.board=" + String(board)+
+  if( debug > 1 ){
+      c.sendCmd(cmd_ack," set_pixel.board=" + String(board)+
                         "row=" + String(row) +
                         " col=" + String(col) +
                         " val=" +String(val));
-#endif
-
+  }
 }
 
 void on_set_rgb(void){
@@ -124,26 +129,32 @@ void on_set_rgb(void){
 
     /*need to know LED strip mapping*/
     //lc.setLed(board,row,col,val);
-    c.sendCmd(cmd_error,"Command set_rgb not implemented.");
+    c.sendCmd(cmd_error,"set_rgb not implemented.");
 
 }
 
 void on_clear(void){
   int board = c.readBinArg<int>();
   lc.clearDisplay(board);
-  c.sendCmd(cmd_ack,"Command clear executed.");
-
+  if (debug>0){
+    c.sendCmd(cmd_ack,"clear executed.");
+  }
 }
 
 void on_start_recording(void){
-  c.sendCmd(cmd_error,"Command on_start_recording not implemented.");
+  c.sendCmd(cmd_error,"on_start_recording not implemented.");
 }
 
 void on_end_recording(void){
-  c.sendCmd(cmd_error,"Command on_end_recording not implemented.");
+  c.sendCmd(cmd_error,"on_end_recording not implemented.");
 }
 void on_play(void){
-  c.sendCmd(cmd_error,"Command on_play not implemented.");
+  c.sendCmd(cmd_error,"on_play not implemented.");
+}
+
+void on_debug(void){
+  debug = c.readBinArg<int>();
+  c.sendCmd(cmd_ack,"debug is "+String(debug));
 }
 
 void on_unknown_command(void){
@@ -166,6 +177,7 @@ void attach_callbacks(void) {
     c.attach(cmd_start_recording,on_start_recording);
     c.attach(cmd_end_recording,on_end_recording);
     c.attach(cmd_play,on_play);
+    c.attach(cmd_debug,on_debug);
     c.attach(on_unknown_command);
 }
 
