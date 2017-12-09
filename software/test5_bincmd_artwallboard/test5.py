@@ -11,7 +11,7 @@ commands = [["who_are_you",""],
             ["my_name_is","s"],
             ["set_intensity","ii"],
             ["set_matrix","iiiiiiiii"], #<boardnum>,<byte>*8 - one byte per row
-            ["delay","l"], #milliseconds
+            ["delay","i"], #milliseconds
             ["set_pixel","iiii"], #<boardnum>,<row>,<col>,<value>
             ["set_rgb","iiiii"], #<boardnum>,<light_index>,<r>,<g>,<b>
             ["clear","i"], #<boardnum>
@@ -68,7 +68,9 @@ def run_arduino_test(c):
     for row in range(8):
         for col in range(8):
             c.send("set_pixel",0,row,col,1)
-            c.send('delay',10)
+            c.send('delay',100)
+            c.send("set_pixel",0,row,col,0)
+            
             print_response(c)
     c.send('delay',5000)
     print_response(c)

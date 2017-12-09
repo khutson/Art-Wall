@@ -197,7 +197,7 @@ void LedControl::spiTransfer(int addr, volatile byte opcode, volatile byte data)
     int maxbytes=maxDevices*2;
 
     for(int i=0;i<maxbytes;i++)
-	    spidata[i]=(byte)0;
+	spidata[i]=(byte)0;
     //put our device data into the array
     spidata[offset+1]=opcode;
     spidata[offset]=data;
@@ -205,7 +205,7 @@ void LedControl::spiTransfer(int addr, volatile byte opcode, volatile byte data)
     digitalWrite(SPI_CS,LOW);
     //Now shift out the data 
     for(int i=maxbytes;i>0;i--)
- 	    shiftOut(SPI_MOSI,SPI_CLK,MSBFIRST,spidata[i-1]);
+ 	shiftOut(SPI_MOSI,SPI_CLK,MSBFIRST,spidata[i-1]);
     //latch the data onto the display
     digitalWrite(SPI_CS,HIGH);
 }    

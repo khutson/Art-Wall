@@ -94,7 +94,7 @@ void on_set_matrix(void){
 }
 
 void on_delay(void){
-  long delay_millis = c.readBinArg<long>();
+  long delay_millis = c.readBinArg<int>();
   if( debug && delay_millis > 1000){
     //only give message if more than a second delay
     c.sendCmd(cmd_ack,"delay for "+String(delay_millis)+" milliseconds.");

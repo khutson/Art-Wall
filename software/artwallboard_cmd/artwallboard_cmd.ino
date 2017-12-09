@@ -1,12 +1,14 @@
 #include "LedControl.h"
 /*
  * 
- * test2_artwallboard
+ * test5_artwallboard
  * Kent Hutson
  * this turns on each of the 64 channels in turn
  * as of 11/18/2017, up to 5 channels light up - this is on a board
  * that is not fully populated with lights, however.
  * as of 12/1/2017, 8 channels light up when one is set - board issue?
+ * 
+ * test5 using cmdmessenger and pycmdmessenger with binary communication
  */
 // 20 is the number of led strips
 // 3 is the number of leds per "led" (3 because tri color)
@@ -15,6 +17,18 @@
 #include "lightgroup.h"
 
 #include "CmdMessenger.h"
+
+#define USE_TEXT
+
+#ifdef USE_BINARY
+#define READINT readBinArg<int>
+
+#endif
+#ifdef USE_TEXT
+#define READINT readInt16Arg
+#endif
+
+int debug = 0;
 
 /* Define available CmdMessenger commands */
 enum {
@@ -30,6 +44,7 @@ enum {
     cmd_end_recording,
     cmd_play,
     cmd_ack,
+    cmd_debug,
     cmd_error,
 };
 
@@ -68,75 +83,88 @@ void on_who_are_you(void){
 }
 
 void on_set_intensity(void){
-    int board = c.readInt16Arg();
-    int intensity = c.readInt16Arg();
+    int board = c.READINT();
+    int intensity = c.READINT();
     lc.setIntensity(board,intensity);
-    c.sendCmd(cmd_ack,"Command set_intensity="+String(intensity));
-
+    if( debug ){
+        c.sendCmd(cmd_ack,"set_intensity="+String(intensity));
+    }
 }
 
 void on_set_matrix(void){
-  int board = c.readInt16Arg();
+  int board = c.READINT();
   byte rows[8];
   for (int i=0;i<8;i++){
-    rows[i]= c.readInt16Arg() && 255;
+    rows[i]= c.READINT() & 255;
     lc.setRow(board,i,rows[i]);
   }
-  c.sendCmd(cmd_ack,"Command set_matrix executed.");
+  if( debug ){
+    c.sendCmd(cmd_ack,"set_matrix");
+  }
 }
 
 void on_delay(void){
-  long delay_millis = c.readInt32Arg();
+  long delay_millis = c.READINT();
+  if( debug && delay_millis > 1000){
+    //only give message if more than a second delay
+    c.sendCmd(cmd_ack,"delay for "+String(delay_millis)+" milliseconds.");
+  }
   delay(delay_millis);
+
 }
 
 void on_set_pixel(void){
    
-    int board = c.readInt16Arg();
-    int row = c.readInt16Arg();
-    int col = c.readInt16Arg();
-    int val = c.readInt16Arg();
+    int board = c.READINT();
+    int row = c.READINT();
+    int col = c.READINT();
+    int val = c.READINT();
 
     lc.setLed(board,row,col,val);
-      c.sendCmd(cmd_ack,"Command set_pixel executed.board=" + String(board)+
+  if( debug > 1 ){
+      c.sendCmd(cmd_ack," set_pixel.board=" + String(board)+
                         "row=" + String(row) +
                         " col=" + String(col) +
                         " val=" +String(val));
-
-  c.sendCmd(cmd_ack,"Command set_pixel executed.");
-
+  }
 }
 
 void on_set_rgb(void){
    
-    int board = c.readInt16Arg();
-    int light_index = c.readInt16Arg();
-    int r = c.readInt16Arg();
-    int g = c.readInt16Arg();
-    int b = c.readInt16Arg();
+    int board = c.READINT();
+    int light_index = c.READINT();
+    int r = c.READINT();
+    int g = c.READINT();
+    int b = c.READINT();
 
     /*need to know LED strip mapping*/
     //lc.setLed(board,row,col,val);
-    c.sendCmd(cmd_error,"Command set_rgb not implemented.");
+    c.sendCmd(cmd_error,"set_rgb not implemented.");
 
 }
 
 void on_clear(void){
-  int board = c.readInt16Arg();
+  int board = c.READINT();
   lc.clearDisplay(board);
-  c.sendCmd(cmd_ack,"Command clear executed.");
-
+  if (debug>0){
+    c.sendCmd(cmd_ack,"clear executed.");
+  }
 }
 
 void on_start_recording(void){
-  c.sendCmd(cmd_error,"Command on_start_recording not implemented.");
+  c.sendCmd(cmd_error,"on_start_recording not implemented.");
 }
 
 void on_end_recording(void){
-  c.sendCmd(cmd_error,"Command on_end_recording not implemented.");
+  c.sendCmd(cmd_error,"on_end_recording not implemented.");
 }
 void on_play(void){
-  c.sendCmd(cmd_error,"Command on_play not implemented.");
+  c.sendCmd(cmd_error,"on_play not implemented.");
+}
+
+void on_debug(void){
+  debug = c.READINT();
+  c.sendCmd(cmd_ack,"debug is "+String(debug));
 }
 
 void on_unknown_command(void){
@@ -159,6 +187,7 @@ void attach_callbacks(void) {
     c.attach(cmd_start_recording,on_start_recording);
     c.attach(cmd_end_recording,on_end_recording);
     c.attach(cmd_play,on_play);
+    c.attach(cmd_debug,on_debug);
     c.attach(on_unknown_command);
 }
 
@@ -169,7 +198,6 @@ void setup()
   lc.setIntensity(0,intensity);
   lc.clearDisplay(0);
   lc.spiTransfer(0,9,0);//no digit decoding
-  //lc.spiTransfer(0,9,0xFF);// digit decoding
   c.printLfCr();
   attach_callbacks();
   
