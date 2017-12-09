@@ -40,7 +40,7 @@ void setup() {
 
   struct LightGroupInfo lgi = {MAGIC, VERSION, "", 0  };
 
-  Serial.print("\nEnter new name: ");
+  Serial.print("\nEnter new name (stars,clock,cylon,fish): ");
   wait_for_input(60);
   bytes_read = Serial.readBytesUntil('\n', lgi.name, MAX_NAME_LENGTH);
   Serial.println();

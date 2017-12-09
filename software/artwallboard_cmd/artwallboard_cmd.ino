@@ -8,7 +8,11 @@
  * that is not fully populated with lights, however.
  * as of 12/1/2017, 8 channels light up when one is set - board issue?
  * 
- * test5 using cmdmessenger and pycmdmessenger with binary communication
+ * as of 12/9/2017
+ * artwallboard_cmd using cmdmessenger and pycmdmessenger with 
+ *   either text or binary communication
+ *   must use binary with pycmdmessenger
+ *   text is useful for quick testing via serial monitor
  */
 // 20 is the number of led strips
 // 3 is the number of leds per "led" (3 because tri color)
@@ -18,14 +22,13 @@
 
 #include "CmdMessenger.h"
 
-#define USE_TEXT
+//#define USE_TEXT
 
-#ifdef USE_BINARY
-#define READINT readBinArg<int>
 
-#endif
 #ifdef USE_TEXT
 #define READINT readInt16Arg
+#else
+#define READINT readBinArg<int>
 #endif
 
 int debug = 0;
@@ -64,7 +67,7 @@ boolean stringComplete = false;
 int rowMax = 8;
 
 /* Initialize CmdMessenger -- this should match PyCmdMessenger instance */
-const int BAUD_RATE = 115200;
+const long BAUD_RATE = 115200;
 CmdMessenger c = CmdMessenger(Serial,',',';','/');
 
 /*  callback functions to deal with incoming messages */
