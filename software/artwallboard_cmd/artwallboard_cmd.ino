@@ -22,7 +22,7 @@
 
 #include "CmdMessenger.h"
 
-//#define USE_TEXT
+#define USE_TEXT
 
 
 #ifdef USE_TEXT
@@ -35,20 +35,20 @@ int debug = 0;
 
 /* Define available CmdMessenger commands */
 enum {
-    cmd_who_are_you, //0
-    cmd_my_name_is, //1
+    cmd_who_are_you,    //0
+    cmd_my_name_is,     //1
     cmd_set_intensity,  //2,<board>,<intensity 0..15>
     cmd_set_matrix,     //3,<board>,<row0byte>,...,<row7byte>
     cmd_delay,          //4,<milliseconds>
     cmd_set_pixel,      //5,<board>,<row 0..7>,<col 0..7>
-    cmd_set_rgb,        //6
+    cmd_set_rgb,        //6,<board>,<light>,<r>,<g>,<b>
     cmd_clear,          //7,<board>
     cmd_start_recording,
     cmd_end_recording,
     cmd_play,
-    cmd_ack,
-    cmd_debug,
-    cmd_error,
+    cmd_ack,            //11,<string>
+    cmd_debug,          //12,<int debug_level>
+    cmd_error,          //13,<string>
 };
 
 
