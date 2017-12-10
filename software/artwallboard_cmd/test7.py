@@ -1,6 +1,3 @@
-# ------------------------------------------------------------------------------
-# Python program using the library to interface with the arduino sketch above.
-# ------------------------------------------------------------------------------
 
 import PyCmdMessenger
 import os, time
